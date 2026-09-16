@@ -20,8 +20,8 @@ final class Settings: ObservableObject {
     private init() {
         d.register(defaults: [
             "enabled": true,
-            "openingID": "duo",
-            "closingID": "clamshell",
+            "openingID": "duoblur",
+            "closingID": "duoblur",
             "paletteID": "duo",
             "speed": 1.0,
             "playOnLid": true,
@@ -30,8 +30,8 @@ final class Settings: ObservableObject {
             "allScreens": true
         ])
         enabled = d.bool(forKey: "enabled")
-        openingID = d.string(forKey: "openingID") ?? "duo"
-        closingID = d.string(forKey: "closingID") ?? "clamshell"
+        openingID = d.string(forKey: "openingID") ?? "duoblur"
+        closingID = d.string(forKey: "closingID") ?? "duoblur"
         paletteID = d.string(forKey: "paletteID") ?? "duo"
         speed = d.double(forKey: "speed")
         playOnLid = d.bool(forKey: "playOnLid")

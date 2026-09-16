@@ -1,8 +1,8 @@
 # Clamshell
 
 A macOS menu-bar app that plays a transition across the whole screen when you close and
-open your MacBook lid. Twenty transitions, twelve palettes, separate choices for opening
-and closing.
+open your MacBook lid. Twenty-two transitions, twelve palettes, separate choices for
+opening and closing.
 
 ![menu bar app](https://img.shields.io/badge/macOS-14%2B-black) ![swift](https://img.shields.io/badge/Swift-6-orange)
 
@@ -46,8 +46,26 @@ every time, because the overlay is already covering the screen when the display 
 | **Fold** — vertical panels fold like an accordion | **Glimmer** — a diagonal band of light wipes the screen | **Dissolve** — a fine grain of tiles blinks out |
 | **Halo** — a single soft halo breathes and clears | **Ink** — blots of colour merge and lift away | **Slide** — a sheet leaves upward with parallax |
 | **Bars** — vertical bars spring away, centre outward | **Spiral** — a radar sweep unwinds around the centre | **Random** — a different one every time |
+| **Duo Blur** — the screen frosts over and resolves | **Fold Frost** — frosted halves hinge shut down the middle | |
 
 Palettes: Duo, Aurora, Sunset, Midnight, Mono, Ember, Mint, Bloom, Deep Sea, Paper, Ink, Vapor.
+
+## The blur transitions
+
+**Duo Blur** and **Fold Frost** blur your actual desktop, which no CALayer can do — a layer
+cannot touch what is behind its own window. They are the one place the project uses views,
+and they stack two mechanisms:
+
+* `backgroundFilters` carrying a `CIGaussianBlur` gives an **animatable radius**. This is the
+  part that makes the frost *arrive* rather than appear. It needs
+  `layerUsesCoreImageFilters = true` and a non-opaque window.
+* `NSVisualEffectView` (`.fullScreenUI`, `.behindWindow`) is the guaranteed backdrop blur on
+  macOS, faded in underneath as a floor so the transition still reads if Core Image filters
+  are unavailable.
+
+Both are driven through the ordinary `Timeline`, so they reverse themselves on opening like
+everything else. Neither appears in a contact sheet — offscreen rasterisation has no window
+behind it to blur, so those two render as just their tint.
 
 ## How a transition is written
 

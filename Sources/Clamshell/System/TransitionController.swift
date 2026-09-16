@@ -84,7 +84,8 @@ final class TransitionController {
                 scale: window.screen?.backingScaleFactor ?? 2,
                 startTime: start
             )
-            window.host.present(TransitionRenderer.makeLayer(transition, ctx: ctx))
+            window.host.present(TransitionRenderer.makeLayer(transition, ctx: ctx),
+                                backdrop: transition.makeBackdrop(ctx))
             window.orderFrontRegardless()
         }
 

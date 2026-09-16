@@ -4,6 +4,7 @@ import QuartzCore
 /// A layer-backed canvas that hosts one transition's layer tree at a time.
 final class TransitionHostView: NSView {
     private var current: CALayer?
+    private var backdrop: NSView?
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -14,10 +15,22 @@ final class TransitionHostView: NSView {
 
     required init?(coder: NSCoder) { fatalError() }
 
-    func present(_ newLayer: CALayer) {
+    func present(_ newLayer: CALayer, backdrop newBackdrop: NSView? = nil) {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         current?.removeFromSuperlayer()
+        backdrop?.removeFromSuperview()
+        backdrop = nil
+
+        // The backdrop is a real subview and must sit beneath the layer tree, so it is
+        // added first and the transition's layers composite on top of it.
+        if let newBackdrop {
+            newBackdrop.frame = bounds
+            newBackdrop.autoresizingMask = [.width, .height]
+            addSubview(newBackdrop)
+            backdrop = newBackdrop
+        }
+
         newLayer.frame = bounds
         layer?.addSublayer(newLayer)
         current = newLayer
@@ -29,6 +42,8 @@ final class TransitionHostView: NSView {
         CATransaction.setDisableActions(true)
         current?.removeFromSuperlayer()
         current = nil
+        backdrop?.removeFromSuperview()
+        backdrop = nil
         CATransaction.commit()
     }
 

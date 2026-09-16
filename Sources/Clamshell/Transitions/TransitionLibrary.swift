@@ -2,6 +2,8 @@ import Foundation
 
 enum TransitionLibrary {
     static let all: [Transition] = [
+        DuoBlurTransition(),
+        FoldFrostTransition(),
         DuoTransition(),
         ClamshellTransition(),
         IrisTransition(),

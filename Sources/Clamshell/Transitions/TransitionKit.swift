@@ -19,6 +19,7 @@ struct TransitionContext {
     var scale: CGFloat
     var startTime: CFTimeInterval
     var mode: TimelineMode = .animate
+    var isPreview: Bool = false
 }
 
 // MARK: - Curves
@@ -325,10 +326,16 @@ protocol Transition {
     var blurb: String { get }
     var baseDuration: CFTimeInterval { get }
     func build(_ t: Timeline)
+
+    /// A live view layered behind the transition's layers. Only blur transitions need
+    /// one: a CALayer cannot blur what is behind the window, so the real backdrop blur
+    /// has to come from `NSVisualEffectView` and `backgroundFilters`.
+    func makeBackdrop(_ ctx: TransitionContext) -> NSView?
 }
 
 extension Transition {
     var baseDuration: CFTimeInterval { 0.95 }
+    func makeBackdrop(_ ctx: TransitionContext) -> NSView? { nil }
 }
 
 enum TransitionRenderer {
