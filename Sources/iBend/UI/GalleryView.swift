@@ -193,7 +193,7 @@ final class GalleryWindowController {
                 styleMask: [.titled, .closable, .miniaturizable, .resizable],
                 backing: .buffered, defer: false
             )
-            w.title = "Clamshell Transitions"
+            w.title = "iBend Transitions"
             w.contentViewController = NSHostingController(rootView: GalleryView())
             w.isReleasedWhenClosed = false
             w.center()

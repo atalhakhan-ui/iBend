@@ -9,7 +9,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItem.button?.image = NSImage(systemSymbolName: "laptopcomputer",
-                                           accessibilityDescription: "Clamshell")
+                                           accessibilityDescription: "iBend")
         statusItem.button?.image?.isTemplate = true
 
         let menu = NSMenu()
@@ -56,7 +56,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         menu.addItem(.separator())
 
         menu.addItem(item("Hide Overlay Now", #selector(hideOverlay)))
-        menu.addItem(item("Quit Clamshell", #selector(quit), key: "q"))
+        menu.addItem(item("Quit iBend", #selector(quit), key: "q"))
     }
 
     private func item(_ title: String, _ action: Selector, key: String = "") -> NSMenuItem {
@@ -180,7 +180,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 try SMAppService.mainApp.register()
             }
         } catch {
-            NSLog("Clamshell: launch-at-login change failed: \(error.localizedDescription)")
+            NSLog("iBend: launch-at-login change failed: \(error.localizedDescription)")
         }
     }
 }

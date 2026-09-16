@@ -17,7 +17,25 @@ final class Settings: ObservableObject {
     @Published var playOnLock: Bool { didSet { d.set(playOnLock, forKey: "playOnLock") } }
     @Published var allScreens: Bool { didSet { d.set(allScreens, forKey: "allScreens") } }
 
+    /// The app shipped briefly under a different bundle identifier, which means a
+    /// different preferences domain. Carry the old choices over once rather than
+    /// silently resetting someone's transitions.
+    private static func migrateLegacyDomain(into d: UserDefaults) {
+        let legacyDomain = "com.talhakhan.Clamshell"
+        guard !d.bool(forKey: "didMigrateLegacyDomain") else { return }
+        defer { d.set(true, forKey: "didMigrateLegacyDomain") }
+
+        guard let legacy = UserDefaults(suiteName: legacyDomain) else { return }
+        for key in ["enabled", "openingID", "closingID", "paletteID", "speed",
+                    "playOnLid", "playOnSleepWake", "playOnLock", "allScreens",
+                    "hasLaunchedBefore"] {
+            guard d.object(forKey: key) == nil, let value = legacy.object(forKey: key) else { continue }
+            d.set(value, forKey: key)
+        }
+    }
+
     private init() {
+        Self.migrateLegacyDomain(into: d)
         d.register(defaults: [
             "enabled": true,
             "openingID": "duoblur",

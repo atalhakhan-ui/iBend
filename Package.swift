@@ -2,12 +2,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "Clamshell",
+    name: "iBend",
     platforms: [.macOS(.v14)],
     targets: [
         .executableTarget(
-            name: "Clamshell",
-            path: "Sources/Clamshell"
+            name: "iBend",
+            path: "Sources/iBend"
         )
     ]
 )

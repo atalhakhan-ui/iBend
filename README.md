@@ -1,4 +1,4 @@
-# Clamshell
+# iBend
 
 A macOS menu-bar app that plays a transition across the whole screen when you close and
 open your MacBook lid. Twenty-two transitions, twelve palettes, separate choices for
@@ -6,17 +6,36 @@ opening and closing.
 
 ![menu bar app](https://img.shields.io/badge/macOS-14%2B-black) ![swift](https://img.shields.io/badge/Swift-6-orange)
 
-## Build and run
+## Install
 
 ```bash
-./build.sh && open build/Clamshell.app
+./package.sh
 ```
 
-It runs as a menu-bar item (no Dock icon). The gallery opens on first launch; after that
-it lives behind the laptop icon in the menu bar.
+Writes `dist/iBend-<version>.dmg` — open it and drag iBend to Applications. Or just build
+and run in place:
 
-Requires Xcode 26 / Swift 6 and macOS 14+. The build script assembles `build/Clamshell.app`
-from the SwiftPM executable and ad-hoc signs it, which is what makes *Launch at Login* stick.
+```bash
+./build.sh && open build/iBend.app
+```
+
+It runs as a menu-bar item (no Dock icon). The gallery opens on first launch; after that it
+lives behind the laptop icon in the menu bar.
+
+Requires Xcode 26 / Swift 6 and macOS 14+. `build.sh` assembles `build/iBend.app` from the
+SwiftPM executable and ad-hoc signs it, which is what makes *Launch at Login* stick.
+
+The build is **ad-hoc signed, not notarised**. That is fine on the machine that built it,
+but a Mac that downloads the DMG will quarantine it and Gatekeeper will refuse to open the
+app. On such a machine, either right-click the app and choose *Open*, or clear the flag:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/iBend.app
+```
+
+Shipping it properly needs a Developer ID certificate and `notarytool`.
+
+`Tools/make-icon.sh` regenerates `Resources/AppIcon.icns` from source.
 
 ## What triggers a transition
 
@@ -91,8 +110,8 @@ To add one: conform to `Transition`, then list it in `TransitionLibrary.all`.
 Screenshotting a full-screen overlay is awkward, so the app can render itself to PNG:
 
 ```bash
-./build/Clamshell.app/Contents/MacOS/Clamshell --contact-sheet ~/Desktop/sheets duo
-./build/Clamshell.app/Contents/MacOS/Clamshell --frame iris 0.5 ~/Desktop/iris.png
+./build/iBend.app/Contents/MacOS/iBend --contact-sheet ~/Desktop/sheets duo
+./build/iBend.app/Contents/MacOS/iBend --frame iris 0.5 ~/Desktop/iris.png
 ```
 
 Contact sheets show every transition sampled at 0%, 25%, 50%, 75% and 100% coverage over a
@@ -111,8 +130,9 @@ in the menu is an unconditional escape hatch.
 ## Layout
 
 ```
-Sources/Clamshell/
-  Transitions/     the animation engine, palettes and the 20 transitions
+Sources/iBend/
+  Transitions/     the animation engine, palettes and the 22 transitions
   System/          lid monitoring, overlay windows, playback, offscreen renderer
   UI/              menu bar, gallery, live previews
+Tools/             app icon generation
 ```
